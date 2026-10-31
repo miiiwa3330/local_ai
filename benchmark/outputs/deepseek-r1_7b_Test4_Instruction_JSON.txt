@@ -1,0 +1,28 @@
+﻿{
+  "companies": [
+    {
+      "id": 1,
+      "name": "AI-Powered Solutions",
+      "industry": "AI",
+      "employee_count": 25,
+      "core_product": "AI Platform",
+      "catchphrase": "未来を切り開くAIソリューション"
+    },
+    {
+      "id": 2,
+      "name": "WebCraft Inc.",
+      "industry": "Web Development",
+      "employee_count": 30,
+      "core_product": "Web Framework Pro",
+      "catchphrase": "強力なWeb開発ツール"
+    },
+    {
+      "id": 3,
+      "name": "SecureNet Technologies",
+      "industry": "Security",
+      "employee_count": 28,
+      "core_product": "Encryption Software",
+      "catchphrase": "安全なオンライン環境"
+    }
+  ]
+}

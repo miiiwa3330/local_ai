@@ -1,0 +1,68 @@
+﻿```python
+from collections import OrderedDict
+import threading
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = OrderedDict()  # OrderedDict を使用して、キー順に順次保存
+        self.lock = threading.Lock()  # スレッドセーフ化のためのロック
+
+    def get(self, key: int) -> int:
+        """
+        キーに対応する値を取得する。
+        :param key: キー
+        :return: キーに対応する値
+        """
+        with self.lock:
+            if key in self.cache:
+                self.cache.move_to_end(key)  # 使用頻度が高い順に更新
+                return self.cache[key]
+        return -1  # キーが見つからない場合は-1を返す
+
+    def put(self, key: int, value: int) -> None:
+        """
+        キーに対応する値を保存する。
+        :param key: キー
+        :param value: キーに対応する値
+        """
+        with self.lock:
+            if key in self.cache:
+                self.cache[key] = value
+                self.cache.move_to_end(key)  # 使用頻度が高い順に更新
+            else:
+                if len(self.cache) == self.capacity:
+                    self.cache.popitem(last=False)  # Capacityを超えた場合は古い順に削除
+                self.cache[key] = value
+
+
+# テストコード
+if __name__ == '__main__':
+    lru_cache = LRUCache(2)  # 2要素のキャッシュ
+
+    # テストケース
+    lru_cache.put(1, 1)
+    lru_cache.put(2, 2)
+    print(lru_cache.get(1))  # 1
+    print(lru_cache.get(2))  # 2
+
+    lru_cache.put(3, 3)  # 3を追加
+    print(lru_cache.get(1))  # 1は削除済み
+    print(lru_cache.get(3))  # 3
+```
+
+**解説:**
+
+1. **`OrderedDict`:** キー順に保存される `OrderedDict` を使用し、LRU計算の順序を維持します。
+2. **`threading.Lock`:** スレッドセーフ化のため、複数のスレッドからの同時アクセスを制御します。
+3. **`get`** と **`put`** の時間計算量は平均 O(1) であることを保証します。
+4. **テストコード:** テストケースとして、`LRUCache` クラスの `get` と `put` メソッドの動作を確認します。
+
+**ポイント:**
+
+* OrderedDict は、キー順に保存されるため、LRU計算の順序を維持します。
+* スレッドセーフ化のため、`threading.Lock` を使用します。
+* `get` と `put` メソッドは、平均 O(1) で動作します。
+
+
+このコードは、Python でスレッドセーフな LRUCache クラスを実装したものです。

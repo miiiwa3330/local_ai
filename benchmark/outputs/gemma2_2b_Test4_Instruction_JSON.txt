@@ -1,0 +1,30 @@
+﻿```json
+{
+  "companies": [
+    {
+      "id": 1,
+      "name": "AI-Tech Co., Ltd.",
+      "industry": "AI",
+      "employee_count": 500,
+      "core_product": "Hyper-AI Platform",
+      "catchphrase": "Smarter Solutions, Smarter World"
+    },
+    {
+      "id": 2,
+      "name": "Cloud-Edge Inc.",
+      "industry": "Cloud",
+      "employee_count": 2000,
+      "core_product": "Next-Gen Cloud Suite",
+      "catchphrase": "Your Cloud, Your Way"
+    },
+    {
+      "id": 3,
+      "name": "CyberGuard Co., Ltd.",
+      "industry": "Security",
+      "employee_count": 1000,
+      "core_product": "Advanced Threat Detection System",
+      "catchphrase": "Protecting the Future, Today"
+    }
+  ]
+}
+```

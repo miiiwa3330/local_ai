@@ -1,0 +1,28 @@
+﻿{
+  "companies": [
+    {
+      "id": 1,
+      "name": "株式会社A",
+      "industry": "AI",
+      "employee_count": 500,
+      "core_product": "AIDrive",
+      "catchphrase": "AIを未来に"
+    },
+    {
+      "id": 2,
+      "name": "株式会社B",
+      "industry": "クラウド",
+      "employee_count": 800,
+      "core_product": "CloudX",
+      "catchphrase": "CloudX、世界を変える"
+    },
+    {
+      "id": 3,
+      "name": "株式会社C",
+      "industry": "セキュリティ",
+      "employee_count": 300,
+      "core_product": "SecureShield",
+      "catchphrase": "セキュリティの未来、ここから"
+    }
+  ]
+}

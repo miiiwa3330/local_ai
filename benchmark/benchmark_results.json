@@ -1,0 +1,134 @@
+﻿[
+    {
+        "Model":  "deepseek-r1:7b",
+        "TestId":  "Test1_Logic",
+        "Category":  "論理推論 (Knights \u0026 Knaves)",
+        "TotalSec":  120.69,
+        "EvalTokens":  641,
+        "EvalTokensPerSec":  5.83,
+        "PromptTokens":  111,
+        "PromptTokensPerSec":  75.58,
+        "Response":  "村人Aと村人Bが会ったとします。村人Aは「私たちの一方または両方が嘘つき族だ」と言ったとします。\n\n**村人Aが正直族である場合：**\n\n- 正直族はいつも真を報告するため、村人Aの言った文は真です。\n- よって、村人Aと村人Bの少なくとも1人は嘘つき族 MUST BE。\n- 然而、村人Aが正直族であるumed Ass umption下で、村人Bが正直族であるumed Ass umption下で、両方の嘘つき族である場合是不可能です。\n- ゆえに、村人Bは嘘つき族 MUST BE。\n\n**村人Aが嘘つき族である場合：**\n\n- 喝食族はいつも嘘をつくため、村人Aの言った文は嘘です。\n- よって、村人Aと村人Bの両方が嘘つき族である場合、村人Aの言った文が嘘であるため矛盾します。\n- しかし、村人Aが嘘つき族であるumed Ass umption下で、村人Bが嘘つき族であるumed Ass umption下で、両方の嘘つき族である場合、嘘つき族である at least oneが true です。\n- これは矛盾を生じ会让します。\n- ゆえに、村人Aが嘘つき族である前提は不合理です。\n\n**結論：**\n\n村人Aは正直族で、村人Bは嘘つき族です。\n\n$\\boxed{\\text{村人A：正直族、村人B：嘘つき族}}$"
+    },
+    {
+        "Model":  "deepseek-r1:7b",
+        "TestId":  "Test2_Japanese",
+        "Category":  "高度な日本語ビジネス文章",
+        "TotalSec":  74.07,
+        "EvalTokens":  378,
+        "EvalTokensPerSec":  5.29,
+        "PromptTokens":  200,
+        "PromptTokensPerSec":  76.92,
+        "Response":  "**件名: 半日遅延で Leigh Report の配布**\n\nDear [Recipient\u0027s Name],\n\nお元気ですか？ 私のチームが、レポートの配布に関するお知らせを Inform いたします。\n\nお客様のレポートの予定 was delayed by half a day due to a system issue. しかし、この issue はすでに特定され、17:00 以内に再配布可能です。\n\nレポートの内容を即座に配布し、必要に応じて詳細なレポートを確認 programmed いたします。 ご参考になれば幸いです。\n\n feel free to reach out if you need any further information.\n\nBest regards,  \n[Your Name]  \n[Your Position]  \n[Your Contact Information]"
+    },
+    {
+        "Model":  "deepseek-r1:7b",
+        "TestId":  "Test3_Coding",
+        "Category":  "コーディング (スレッドセーフLRUキャッシュ)",
+        "TotalSec":  286.54,
+        "EvalTokens":  1546,
+        "EvalTokensPerSec":  5.44,
+        "PromptTokens":  167,
+        "PromptTokensPerSec":  73.44,
+        "Response":  "### Python LRU クラス実装\n\n#### 要件満たす LRU クラス\n\n1. **平均 O(1) 的 wonder 時間計算量**\n2. **kapacity がコンストラクタで受け取る**\n3. **スレッドセーフ**\n4. **get  und put が正しく動作するマルチスレッドテスト**\n\n#### クラス実装\n\n```python\nimport threading\nimport time\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.cache = {}  # key-value\n        self usage_order = []  # keyが追加/更新された順番を管理する\n        self.last_used = {}  # keyの最後に使われた時刻を管理する\n\n    def __set_name__(self, owner, name):\n        # __set_name__ は @property に使われることが rack\n        # 通常は使わないが、get  und put が持つ名前空間を管理する\n        pass\n\n    def __del__(self):\n        # 値を消す\n        pass\n\n    def get(self, key):\n        if key not in self.cache:\n            return None\n        # keyの最後に使われた時刻を更新\n        self.last_used[key] = time.time()\n        return self.cache[key]\n\n    def put(self, key, value):\n        if key in self.cache:\n            # keyが存在する場合\n            # 最新使用時刻を更新し、Usage Orderの末尾に追加\n            self.last_used[key] = time.time()\n            self.usage_order.remove(key)\n            self.usage_order.append(key)\n            self.cache[key] = value\n            return\n\n        if len(self.cache) \u003e= self.capacity:\n            # カPacityに達した場合、最も古いkeyを削除\n            # 最初に追加されたkeyを削除\n            evicted_key = self.usage_order.pop(0)\n            del self.cache[evicted_key]\n            del self.last_used[evicted_key]\n\n        # keyを追加\n        self.cache[key] = value\n        self.last_used[key] = time.time()\n        self.usage_order.append(key)\n\n    def __enter__(self):\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        threading.local()\n        pass\n\n    @classmethod\n    def test(cls, capacity, iterations):\n        cache = cls(capacity)\n        for _ in range(iterations):\n            key = f\"key_{_}\"\n            value = f\"value_{_}\"\n            \n            # put\n            cache.put(key, value)\n            \n            # get\n            if key in cache.cache:\n                cache.get(key)\n            else:\n                assert cache.get(key) is None\n        \n        print(\"All tests passed!\")\n```\n\n#### テスト例\n\n```python\nif __name__ == \"__main__\":\n    import threading\n    import time\n    \n    # LRU cacheのCapacity\n    CAPACITY = 4\n    # テストiteration回数\n    ITERATIONS = 100\n    \n    # create cache\n    cache = LRUCache(CAPACITY)\n    \n    # Thread群\n    threads = []\n    for _ in range(8):\n        thread = threading.Thread(target=cache.test, args=(CAPACITY, ITERATIONS))\n        threads.append(thread)\n        thread.start()\n    \n    # Threadが完了する\n    for thread in threads:\n        thread.join()\n    \n    print(\"All threads finished\")\n```\n\n#### 說明\n\n1. **LRU クラス**:\n   - `__init__`: 容量を初期化し、cache、usage_order、last_usedを管理する。\n   - `get`: keyを取得し、last_usedを更新。\n   - `put`: keyを追加し、usage_orderを管理。\n   - `test`: 多ithread test。\n   \n2. **スレッドセーフ性**:\n   - `usage_order` と `last_used` は lock を用いず直接管理されるため、スレッドセーフです。\n   \n3. **性能**:\n   - get und put は平均 O(1) 時間計算量です。\n   - 容量を制限し、最古老的 key を削除します。\n\n4. **テスト**:\n   - 多ithread testで cacheの挙動を確認します。\n\nこの実装はスレッドセーフ、性能を保ちつつ、正しく動作する LRU クラスを提供します。"
+    },
+    {
+        "Model":  "deepseek-r1:7b",
+        "TestId":  "Test4_Instruction_JSON",
+        "Category":  "指示遵守・JSON出力",
+        "TotalSec":  80.63,
+        "EvalTokens":  462,
+        "EvalTokensPerSec":  5.92,
+        "PromptTokens":  212,
+        "PromptTokensPerSec":  82.45,
+        "Response":  "{\n  \"companies\": [\n    {\n      \"id\": 1,\n      \"name\": \"AI-Powered Solutions\",\n      \"industry\": \"AI\",\n      \"employee_count\": 25,\n      \"core_product\": \"AI Platform\",\n      \"catchphrase\": \"未来を切り開くAIソリューション\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"WebCraft Inc.\",\n      \"industry\": \"Web Development\",\n      \"employee_count\": 30,\n      \"core_product\": \"Web Framework Pro\",\n      \"catchphrase\": \"強力なWeb開発ツール\"\n    },\n    {\n      \"id\": 3,\n      \"name\": \"SecureNet Technologies\",\n      \"industry\": \"Security\",\n      \"employee_count\": 28,\n      \"core_product\": \"Encryption Software\",\n      \"catchphrase\": \"安全なオンライン環境\"\n    }\n  ]\n}"
+    },
+    {
+        "Model":  "llama3.1:8b",
+        "TestId":  "Test1_Logic",
+        "Category":  "論理推論 (Knights \u0026 Knaves)",
+        "TotalSec":  112.13,
+        "EvalTokens":  386,
+        "EvalTokensPerSec":  5.21,
+        "PromptTokens":  125,
+        "PromptTokensPerSec":  10.1,
+        "Response":  "この問題を解決するには、帰納的推論を使用します。\n\nステップ 1: 「私たちの一方または両方が嘘つき族だ」という村人Aの発言を分析することから始めます。嘘つき族は常に嘘をつきます。したがって、村人Aの発言は嘘ではないかもしれませんが、嘘をついた場合は嘘です。\n\nステップ 2: 嘘をつく場合、村人Aは「私たちの一方または両方が嘘つき族だ」という嘘を言っていますが、実際には嘘つき族ではありません。つまり、村人Aは嘘をついていないので、村人Aは嘘つき族ではありません。\n\nステップ 3: 嘘をつく場合、村人Aは嘘をついていますが、実際には嘘つき族ではありません。したがって、村人Aは嘘つき族ではありません。\n\nステップ 4: ここで、村人Bについて考えてみましょう。村人Aと村人Bはどちらの部族に属するかを考える必要があります。 \n\nステップ 5: ステップ 2 と 3 から、村人Aは嘘つき族ではありません。 \n\nステップ 6: ステップ 1 から、村人Aは嘘をついていないので、村人Bは嘘つき族である必要があります。 \n\nステップ 7: したがって、村人Aは正直族であり、村人Bは嘘つき族です。\n\n最終的な答えは、Aは正直族、Bは嘘つき族です。"
+    },
+    {
+        "Model":  "llama3.1:8b",
+        "TestId":  "Test2_Japanese",
+        "Category":  "高度な日本語ビジネス文章",
+        "TotalSec":  57.75,
+        "EvalTokens":  285,
+        "EvalTokensPerSec":  5.2,
+        "PromptTokens":  220,
+        "PromptTokensPerSec":  75.69,
+        "Response":  "以下のようなメール文面が考えられます。\n\n件名: 月次レポートの遅延についてのお詫びと代替提案\n\n尊敬する取引先の各部長様\n\n本日、自社のシステム障害により予定していた月次レポートの納品が半日遅延することとなりました。ご了承のほど宜しくお願い申し上げます。\n\n障害の特定と復旧作業中であり、本日17時までには確実に納品可能と判断しております。ただし、取引先の社内会議が本日夕方に控かれ、レポートが必要な可能性が生じる恐れがあります。\n\nそのため、暫定値のサマリーデータを、現在の状況を反映させたものをご用意しております。ご了承のほど宜しくお願い申し上げます。必要な場合は、レポートの内容の詳細をご要望のほど、ご了承のほど宜しくお願い申し上げます。\n\nご了承のほど宜しくお願い申し上げます。\n\n承知しました。\n以上の文面は、ビジネスメールとしての丁寧さを確保しつつ、状況を明確に伝えるものになっています。"
+    },
+    {
+        "Model":  "llama3.1:8b",
+        "TestId":  "Test3_Coding",
+        "Category":  "コーディング (スレッドセーフLRUキャッシュ)",
+        "TotalSec":  145.36,
+        "EvalTokens":  737,
+        "EvalTokensPerSec":  5.16,
+        "PromptTokens":  174,
+        "PromptTokensPerSec":  72.01,
+        "Response":  "以下に、PythonでスレッドセーフなLRUキャッシュクラスを実装したコードを示します。\n\n```python\nimport threading\nfrom collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.cache = OrderedDict()\n        self.lock = threading.Lock()\n\n    def get(self, key):\n        with self.lock:\n            if key in self.cache:\n                value = self.cache.pop(key)\n                self.cache[key] = value  # LRU\n                return value\n            return None\n\n    def put(self, key, value):\n        with self.lock:\n            if key in self.cache:\n                self.cache.pop(key)\n            elif len(self.cache) \u003e= self.capacity:\n                self.cache.popitem(last=False)  # oldest item\n            self.cache[key] = value\n\nimport threading\nimport time\nimport unittest\n\nclass TestLRUCache(unittest.TestCase):\n    def test_lru_cache(self):\n        cache = LRUCache(3)\n\n        # put\n        cache.put(\u0027key1\u0027, \u0027value1\u0027)\n        cache.put(\u0027key2\u0027, \u0027value2\u0027)\n        cache.put(\u0027key3\u0027, \u0027value3\u0027)\n\n        # get\n        self.assertEqual(cache.get(\u0027key1\u0027), \u0027value1\u0027)\n        self.assertEqual(cache.get(\u0027key2\u0027), \u0027value2\u0027)\n        self.assertEqual(cache.get(\u0027key3\u0027), \u0027value3\u0027)\n\n        # put (key1)\n        cache.put(\u0027key1\u0027, \u0027new_value1\u0027)\n\n        # get (key1)\n        self.assertEqual(cache.get(\u0027key1\u0027), \u0027new_value1\u0027)\n\n        # put (key4)\n        cache.put(\u0027key4\u0027, \u0027value4\u0027)\n\n        # get (key2)\n        self.assertEqual(cache.get(\u0027key2\u0027), \u0027value2\u0027)\n\nif __name__ == \u0027__main__\u0027:\n    unittest.main()\n```\n\nこのコードでは、`LRUCache`クラスはキャッシュのサイズを制御するための`capacity`引数を受け取ります。キャッシュは`OrderedDict`で実装され、`get`および`put`メソッドは`threading.Lock`を使用してスレッドセーフに実装されています。\n\nテストコードは、`LRUCache`クラスの基本的な動作を検証します。キャッシュのサイズが 3 に設定されている場合、キャッシュ内のアイテムの削除と再追加をテストします。\n\n`LRUCache`クラスは、キャッシュ内のアイテムの削除と再追加を実現するために、`OrderedDict`クラスを使用します。`OrderedDict`クラスは、特定の順序でアイテムを保持するためのダブルリンクされたリストを内部的に使用します。アイテムを追加または削除すると、リスト内のアイテムの順序が変更されます。\n\n`threading.Lock`クラスは、スレッド間で共有リソースへのアクセスを同期化するためのロックオブジェクトを提供します。`with`ステートメントを使用して、ロックを取得し、リソースへのアクセスが完了したらロックを解放します。\n\nこの実装では、平均時間計算量が O(1) であるため、`get`および`put`メソッドは効率的です。また、`threading.Lock`クラスを使用して、複数スレッドからの同時アクセスに対してスレッドセーフであることを保証します。"
+    },
+    {
+        "Model":  "llama3.1:8b",
+        "TestId":  "Test4_Instruction_JSON",
+        "Category":  "指示遵守・JSON出力",
+        "TotalSec":  44.09,
+        "EvalTokens":  213,
+        "EvalTokensPerSec":  5.18,
+        "PromptTokens":  220,
+        "PromptTokensPerSec":  77.53,
+        "Response":  "{\n  \"companies\": [\n    {\n      \"id\": 1,\n      \"name\": \"テクノロジーハウス\",\n      \"industry\": \"AI\",\n      \"employee_count\": 50,\n      \"core_product\": \"AIアシスタント\",\n      \"catchphrase\": \"未来を作る\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"クラウドワークス\",\n      \"industry\": \"クラウド\",\n      \"employee_count\": 200,\n      \"core_product\": \"クラウドプラットフォーム\",\n      \"catchphrase\": \"世界を接続する\"\n    },\n    {\n      \"id\": 3,\n      \"name\": \"セキュリティアドバンス\",\n      \"industry\": \"セキュリティ\",\n      \"employee_count\": 100,\n      \"core_product\": \"セキュリティソリューション\",\n      \"catchphrase\": \"安全な世界を創造する\"\n    }\n  ]\n}"
+    },
+    {
+        "Model":  "gemma2:2b",
+        "TestId":  "Test1_Logic",
+        "Category":  "論理推論 (Knights \u0026 Knaves)",
+        "TotalSec":  46.78,
+        "EvalTokens":  277,
+        "EvalTokensPerSec":  61.62,
+        "PromptTokens":  108,
+        "PromptTokensPerSec":  6.39,
+        "Response":  "この問題を解くには、論理的なステップバイステップで説明していく必要があります。\n\n**ステップ 1: Aの主張**\n\n村人Aは「私たちの一方または両方が嘘つき族だ」と言いました。\n\n**ステップ 2: 矛盾の可能性**\n\nこの主張は矛盾が生じます。なぜなら、村人Aは村人Bと自分の所属を明確に示すために「私たちの一方または両方が嘘つき族だ」と言ったからです。\n\n**ステップ 3: 矛盾を解決するための前提**\n\nAが「私たちの一方または両方が嘘つき族だ」と言った場合、Aは自分が「正直者」であることを示唆しています。\n\n**ステップ 4: AとBの所属**\n\n* **Aが正直者:** Aは「正直者」であるため、村人Bが嘘つき族である可能性を否定する。\n* **Bが嘘つき者:** Bが嘘つき族である可能性は、Aが「正直者」であることを示唆する。\n\n**ステップ 5: 結論**\n\nAは「正直者」であり、Bは「嘘つき者」であることが結論となります。\n\n**結論**\n\n村人Aは「正直者」、村人Bは「嘘つき者」であることが結論となります。"
+    },
+    {
+        "Model":  "gemma2:2b",
+        "TestId":  "Test2_Japanese",
+        "Category":  "高度な日本語ビジネス文章",
+        "TotalSec":  7.22,
+        "EvalTokens":  396,
+        "EvalTokensPerSec":  60.61,
+        "PromptTokens":  177,
+        "PromptTokensPerSec":  266.98,
+        "Response":  "件名：【月次レポート】遅延のお詫びと代替提案\n\n〇〇株式会社 〇〇様\n\nいつもお世話になっております。\n株式会社△△の△△です。\n\n先日は、月次レポートの納品についてご迷惑をおかけいたしました。\n自社のシステム障害により、納品が遅延する状況となりました。\n\n現在、障害は特定・復旧作業を行っており、17時までには確実に納品することが可能です。\n皆様の業務に影響を及ぼす可能性があるため、大変申し訳ございませんが、\n暫定値のサマリーデータにつきましては、今すぐ提供させていただきます。\n\n本日の夕方に社内会議が控えていること、ご報告の必要性も考慮し、\n代替提案とさせていただきます。\nご迷惑をおかけして申し訳ございませんが、ご理解いただけますと幸いです。\n\n\nご不明な点等ございましたら、お気軽にお申し付けください。\n\n敬具\n\n株式会社△△\n△△\n \n\n\n \n\n\n**ポイント**\n\n* **丁寧な言葉遣い:**  「いつもお世話になっております」「大変申し訳ございません」「ご迷惑をおかけいたします」など、丁寧な言葉遣いを心がけましょう。\n* **事実を簡潔に伝える:**  システム障害、遅延、納品予定時刻など、重要な情報を簡潔に伝えることで、相手に分かりやすくなります。\n* **代替案を提示:**  暫定値のデータ提供を提案することで、取引先への配慮を示しましょう。\n* **謝罪と責任の明確化:**  自己責任を明確に示すことで、取引先との信頼関係を築くことができます。 \n* **簡潔な文章:**  長い文章ではなく、要点を抑えた簡潔な文章で、相手に分かりやすく伝えましょう。\n* **確認を促す:**  最終的な内容確認を促すことで、取引先からの返答をスムーズに促すことができます。\n\n\n\n \n"
+    },
+    {
+        "Model":  "gemma2:2b",
+        "TestId":  "Test3_Coding",
+        "Category":  "コーディング (スレッドセーフLRUキャッシュ)",
+        "TotalSec":  12.25,
+        "EvalTokens":  701,
+        "EvalTokensPerSec":  60.1,
+        "PromptTokens":  153,
+        "PromptTokensPerSec":  275.28,
+        "Response":  "```python\nfrom collections import OrderedDict\nimport threading\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = OrderedDict()  # OrderedDict を使用して、キー順に順次保存\n        self.lock = threading.Lock()  # スレッドセーフ化のためのロック\n\n    def get(self, key: int) -\u003e int:\n        \"\"\"\n        キーに対応する値を取得する。\n        :param key: キー\n        :return: キーに対応する値\n        \"\"\"\n        with self.lock:\n            if key in self.cache:\n                self.cache.move_to_end(key)  # 使用頻度が高い順に更新\n                return self.cache[key]\n        return -1  # キーが見つからない場合は-1を返す\n\n    def put(self, key: int, value: int) -\u003e None:\n        \"\"\"\n        キーに対応する値を保存する。\n        :param key: キー\n        :param value: キーに対応する値\n        \"\"\"\n        with self.lock:\n            if key in self.cache:\n                self.cache[key] = value\n                self.cache.move_to_end(key)  # 使用頻度が高い順に更新\n            else:\n                if len(self.cache) == self.capacity:\n                    self.cache.popitem(last=False)  # Capacityを超えた場合は古い順に削除\n                self.cache[key] = value\n\n\n# テストコード\nif __name__ == \u0027__main__\u0027:\n    lru_cache = LRUCache(2)  # 2要素のキャッシュ\n\n    # テストケース\n    lru_cache.put(1, 1)\n    lru_cache.put(2, 2)\n    print(lru_cache.get(1))  # 1\n    print(lru_cache.get(2))  # 2\n\n    lru_cache.put(3, 3)  # 3を追加\n    print(lru_cache.get(1))  # 1は削除済み\n    print(lru_cache.get(3))  # 3\n```\n\n**解説:**\n\n1. **`OrderedDict`:** キー順に保存される `OrderedDict` を使用し、LRU計算の順序を維持します。\n2. **`threading.Lock`:** スレッドセーフ化のため、複数のスレッドからの同時アクセスを制御します。\n3. **`get`** と **`put`** の時間計算量は平均 O(1) であることを保証します。\n4. **テストコード:** テストケースとして、`LRUCache` クラスの `get` と `put` メソッドの動作を確認します。\n\n**ポイント:**\n\n* OrderedDict は、キー順に保存されるため、LRU計算の順序を維持します。\n* スレッドセーフ化のため、`threading.Lock` を使用します。\n* `get` と `put` メソッドは、平均 O(1) で動作します。\n\n\nこのコードは、Python でスレッドセーフな LRUCache クラスを実装したものです。"
+    },
+    {
+        "Model":  "gemma2:2b",
+        "TestId":  "Test4_Instruction_JSON",
+        "Category":  "指示遵守・JSON出力",
+        "TotalSec":  4.61,
+        "EvalTokens":  238,
+        "EvalTokensPerSec":  61.01,
+        "PromptTokens":  196,
+        "PromptTokensPerSec":  294.4,
+        "Response":  "```json\n{\n  \"companies\": [\n    {\n      \"id\": 1,\n      \"name\": \"AI-Tech Co., Ltd.\",\n      \"industry\": \"AI\",\n      \"employee_count\": 500,\n      \"core_product\": \"Hyper-AI Platform\",\n      \"catchphrase\": \"Smarter Solutions, Smarter World\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Cloud-Edge Inc.\",\n      \"industry\": \"Cloud\",\n      \"employee_count\": 2000,\n      \"core_product\": \"Next-Gen Cloud Suite\",\n      \"catchphrase\": \"Your Cloud, Your Way\"\n    },\n    {\n      \"id\": 3,\n      \"name\": \"CyberGuard Co., Ltd.\",\n      \"industry\": \"Security\",\n      \"employee_count\": 1000,\n      \"core_product\": \"Advanced Threat Detection System\",\n      \"catchphrase\": \"Protecting the Future, Today\"\n    }\n  ]\n}\n```"
+    }
+]

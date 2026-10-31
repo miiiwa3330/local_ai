@@ -1,0 +1,28 @@
+﻿{
+  "companies": [
+    {
+      "id": 1,
+      "name": "テクノロジーハウス",
+      "industry": "AI",
+      "employee_count": 50,
+      "core_product": "AIアシスタント",
+      "catchphrase": "未来を作る"
+    },
+    {
+      "id": 2,
+      "name": "クラウドワークス",
+      "industry": "クラウド",
+      "employee_count": 200,
+      "core_product": "クラウドプラットフォーム",
+      "catchphrase": "世界を接続する"
+    },
+    {
+      "id": 3,
+      "name": "セキュリティアドバンス",
+      "industry": "セキュリティ",
+      "employee_count": 100,
+      "core_product": "セキュリティソリューション",
+      "catchphrase": "安全な世界を創造する"
+    }
+  ]
+}

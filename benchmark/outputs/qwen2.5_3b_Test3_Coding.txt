@@ -1,0 +1,90 @@
+﻿以下にLRUキャッシュの実装とテストコードを示します。
+
+まず、LRUキャッシュクラスを実装します。このクラスは、キーリストと値リストを持つことで、取り扱う値の順序を保持します。また、キーと値を紐づける辞書も持つことで、キーに対して値を直接アクセスできます。
+
+```python
+import threading
+
+class LRUCache:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.keys = []
+        self.values = []
+        self.cache = {}
+        self.lock = threading.Lock()
+
+    def get(self, key):
+        with self.lock:
+            if key not in self.cache:
+                return -1
+            # Update the order, LRU will be moved to the end
+            self.keys.remove(key)
+            self.keys.append(key)
+            self.values.remove(self.cache[key])
+            self.values.append(self.cache[key])
+            return self.cache[key]
+
+    def put(self, key, value):
+        with self.lock:
+            if key in self.cache:
+                # Key already exists, update the value and update order
+                index = self.keys.index(key)
+                self.values[index] = value
+                self.cache[key] = value
+            elif len(self.keys) < self.capacity:
+                # New key, add it to the end of the list
+                self.keys.append(key)
+                self.values.append(value)
+                self.cache[key] = value
+            else:
+                # Evict the least recently used key
+                first_key = self.keys.pop(0)
+                del self.cache[first_key]
+                self.keys.append(key)
+                self.values.append(value)
+                self.cache[key] = value
+```
+
+このLRUキャッシュクラスは、キーと値の順序を保持するためのキーリストと値リストを持つことで、取り扱う値の順序を保持します。また、キーと値を紐づける辞書も持つことで、キーに対して値を直接アクセスできます。
+
+そして、マルチスレッドでのテストコードを示します：
+
+```python
+import threading
+import time
+from collections import deque
+
+def test_put(cache, key, value, num_threads):
+    threads = []
+    for _ in range(num_threads):
+        thread = threading.Thread(target=cache.put, args=(key, value))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
+
+def test_get(cache, key, num_threads):
+    threads = []
+    for _ in range(num_threads):
+        thread = threading.Thread(target=cache.get, args=(key,))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
+
+def test(cache, num_threads):
+    test_put(cache, 1, 10, num_threads)
+    test_put(cache, 2, 20, num_threads)
+    test_put(cache, 3, 30, num_threads)
+    test_put(cache, 4, 40, num_threads)
+    test_get(cache, 1, num_threads)
+    test_get(cache, 2, num_threads)
+    test_get(cache, 3, num_threads)
+    test_get(cache, 4, num_threads)
+    test_get(cache, 5, num_threads)
+
+cache = LRUCache(2)
+test(cache, 10)
+```
+
+このテストコードは、指定されたスレッド数でputとgetをテストし、キャッシュの動作を確認します。スレッド数が大きくなると、putの操作が遅くなることが確認できます。また、getの操作はすべてのスレッドで同じkeyを取得するため、値が正しい順番で返されることを確認できます。
